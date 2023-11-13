@@ -1,5 +1,7 @@
 package com.example.f23comp1011s2w2movies;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,7 +17,7 @@ public class APIUtility {
      * the given name
      * @param movieName The name of the movie to search for
      */
-    public static void searchMovies(String movieName) throws IOException, InterruptedException {
+    public static APIResponse searchMovies(String movieName) throws IOException, InterruptedException {
         movieName = movieName.replaceAll(" ", "%20");
 
         String uri = "http://www.omdbapi.com/?apikey=c05b3979&s=" + movieName;
@@ -33,8 +35,8 @@ public class APIUtility {
         System.out.println(httpResponse.body());
 
         // IMPORTANT: lease make sure to update the pop.xml and module-info.java file to handle GSON
-
-
+        Gson gson = new Gson();
+        return gson.fromJson(httpResponse.body(), APIResponse.class);
 
     }
 }

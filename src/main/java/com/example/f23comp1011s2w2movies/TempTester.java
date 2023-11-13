@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class TempTester {
     public static void main(String[] args) throws IOException, InterruptedException {
-        APIUtility.searchMovies("Infinity War");
+        APIResponse apiResponse = APIUtility.searchMovies("Infinity War");
+        System.out.println(apiResponse);
     }
 }
