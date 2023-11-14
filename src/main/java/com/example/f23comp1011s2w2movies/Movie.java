@@ -15,7 +15,7 @@ public class Movie {
     private String type;
 
     @SerializedName("Poster")
-    private String posterURL;
+    private String posterArt;
 
     public String getTitle() {
         return title;
@@ -33,7 +33,12 @@ public class Movie {
         return type;
     }
 
-    public String getPosterURL() {
-        return posterURL;
+    public String getPosterArt() {
+        return posterArt;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", title, year);
     }
 }

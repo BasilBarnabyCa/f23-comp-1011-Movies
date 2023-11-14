@@ -27,12 +27,12 @@ public class APIUtility {
         HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(uri)).build();
 
         // Write json response to a file
-//        HttpResponse<Path> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofFile(Paths.get("movies.json")));
+        // HttpResponse<Path> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofFile(Paths.get("movies.json")));
 
-        // Write json to a Java Objecft
+        // Write json to a Java Object
         HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(httpResponse.body());
+        // System.out.println(httpResponse.body());
 
         // IMPORTANT: lease make sure to update the pop.xml and module-info.java file to handle GSON
         Gson gson = new Gson();

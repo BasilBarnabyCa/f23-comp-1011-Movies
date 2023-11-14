@@ -13,14 +13,26 @@ public class APIResponse {
     @SerializedName("Search")
     private Movie[] movies;
 
+    /**
+     * This method will return the total number of results
+     * @return totalResults The total number of results
+     */
     public String getTotalResults() {
         return totalResults;
     }
 
+    /**
+     * This method will return true if the response is "True"
+     * @return response True if the response is "True"
+     */
     public String getResponse() {
         return response;
     }
 
+    /**
+     * This method will return an ArrayList of Movies
+     * @return movies An ArrayList of Movies
+     */
     public Movie[] getMovies() {
         return movies;
     }
