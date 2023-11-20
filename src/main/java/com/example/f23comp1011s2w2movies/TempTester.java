@@ -6,5 +6,8 @@ public class TempTester {
     public static void main(String[] args) throws IOException, InterruptedException {
         APIResponse apiResponse = APIUtility.searchMovies("Infinity War");
         System.out.println(apiResponse);
+
+        MovieDetails movieDetails = APIUtility.getMovie("tt9777666");
+        System.out.println(movieDetails);
     }
 }

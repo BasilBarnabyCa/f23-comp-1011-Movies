@@ -20,12 +20,14 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MoviesController {
-
     @FXML
     private ListView<Movie> listView;
 
     @FXML
     private Label msgLabel;
+
+    @FXML
+    private Label infoLabel;
 
     @FXML
     private ImageView posterImageView;
@@ -48,8 +50,10 @@ public class MoviesController {
     private void initialize() {
         progressBar.setVisible(false);
         selectedVBox.setVisible(false);
-        msgLabel.setVisible(false);
         apiCallTimes = new ArrayList<>();
+        resultsBox.setVisible(false);
+        msgLabel.setVisible(false);
+        infoLabel.setText("");
 
         // Configure the list view with a listener so that when a movie is selected it will show the poster art
         listView.getSelectionModel()
@@ -71,7 +75,9 @@ public class MoviesController {
     @FXML
     void getMovies(ActionEvent event) throws IOException, InterruptedException {
         String movieName = searchTextField.getText();
-        msgLabel.setText("");
+        resultsBox.setVisible(false);
+        msgLabel.setVisible(false);
+        infoLabel.setText("");
         clearOldTimeStamps();
 
         if (!movieName.trim().isEmpty())
@@ -80,14 +86,28 @@ public class MoviesController {
             if(apiCallTimes.size() < 30)
             {
                 APIResponse apiResponse = APIUtility.searchMovies(movieName.trim());
-                listView.getItems().clear();
-                listView.getItems().addAll(apiResponse.getMovies());
+                if(apiResponse.getMovies() != null) {
+                    resultsBox.setVisible(true);
+                    listView.getItems().clear();
+                    listView.getItems().addAll(apiResponse.getMovies());
+                    infoLabel.setText("Showing " + apiResponse.getMovies().length + " of " + apiResponse.getTotalResults() + " results");
+                } else {
+                    msgLabel.setVisible(true);
+                    msgLabel.setText("No movies found");
+                }
             }
         }
         else
         {
+            msgLabel.setVisible(true);
             msgLabel.setText("Please enter a movie name");
         }
+    }
+
+    @FXML
+    private void showDetails(ActionEvent event) throws IOException {
+        Movie selectedMovie = listView.getSelectionModel().selectedItemProperty().getValue();
+        SceneChanger.changeScenes(event, "details-view.fxml", selectedMovie.getImdbID());
     }
 
     private void clearOldTimeStamps()
