@@ -19,10 +19,10 @@ public class APIUtility {
      * the given name
      * @param movieName The name of the movie to search for
      */
-    public static APIResponse searchMovies(String movieName) throws IOException, InterruptedException {
+    public static APIResponse searchMovies(String movieName, int page) throws IOException, InterruptedException {
         movieName = movieName.replaceAll(" ", "%20");
 
-        String uri = "http://www.omdbapi.com/?apikey=c05b3979&s=" + movieName;
+        String uri = "http://www.omdbapi.com/?apikey=c05b3979&s=" + movieName + "&page=" + page;
 
         // Configure the environment to make HTTP requests (this includes an update to the module-info.java file)
         HttpClient client = HttpClient.newHttpClient();

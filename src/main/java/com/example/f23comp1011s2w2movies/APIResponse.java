@@ -2,6 +2,7 @@ package com.example.f23comp1011s2w2movies;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class APIResponse {
@@ -11,7 +12,7 @@ public class APIResponse {
     private String response;
 
     @SerializedName("Search")
-    private Movie[] movies;
+    private ArrayList<Movie> movies;
 
     /**
      * This method will return the total number of results
@@ -33,7 +34,7 @@ public class APIResponse {
      * This method will return an ArrayList of Movies
      * @return movies An ArrayList of Movies
      */
-    public Movie[] getMovies() {
+    public ArrayList<Movie> getMovies() {
         return movies;
     }
 }

@@ -38,3 +38,23 @@
 .text-field{
     -fx-background-radius: 20px;
 }
+
+.infoLabel{
+    -fx-font-size: 14pt;
+}
+
+.progress-bar {
+    -fx-background-radius: 20px;
+    -fx-pref-height: 50px;
+    -fx-border-radius: 20px;
+}
+
+.progress-bar .track{
+    -fx-background-color: #f7f7f7;
+    -fx-background-radius: 20px;
+}
+
+.progress-bar .bar{
+    -fx-background-color: linear-gradient(to left, #e0820f, #f7f7f7);
+    -fx-background-radius: 18px;
+}

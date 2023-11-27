@@ -1,11 +1,9 @@
 package com.example.f23comp1011s2w2movies;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -44,7 +42,12 @@ public class MoviesController {
     @FXML
     private VBox selectedVBox;
 
+    @FXML
+    private Button fetchAllButton;
+
     private ArrayList<LocalDateTime> apiCallTimes;
+
+    private int totalNumberOfMovies, page;
 
     @FXML
     private void initialize() {
@@ -54,6 +57,7 @@ public class MoviesController {
         resultsBox.setVisible(false);
         msgLabel.setVisible(false);
         infoLabel.setText("");
+        fetchAllButton.setVisible(false);
 
         // Configure the list view with a listener so that when a movie is selected it will show the poster art
         listView.getSelectionModel()
@@ -79,18 +83,20 @@ public class MoviesController {
         msgLabel.setVisible(false);
         infoLabel.setText("");
         clearOldTimeStamps();
+        page = 1;
 
         if (!movieName.trim().isEmpty())
         {
             apiCallTimes.add(LocalDateTime.now());
             if(apiCallTimes.size() < 30)
             {
-                APIResponse apiResponse = APIUtility.searchMovies(movieName.trim());
+                APIResponse apiResponse = APIUtility.searchMovies(movieName.trim(), page);
                 if(apiResponse.getMovies() != null) {
+                    totalNumberOfMovies = Integer.parseInt(apiResponse.getTotalResults());
                     resultsBox.setVisible(true);
                     listView.getItems().clear();
                     listView.getItems().addAll(apiResponse.getMovies());
-                    infoLabel.setText("Showing " + apiResponse.getMovies().length + " of " + apiResponse.getTotalResults() + " results");
+                    updateLabels();
                 } else {
                     msgLabel.setVisible(true);
                     msgLabel.setText("No movies found");
@@ -118,6 +124,47 @@ public class MoviesController {
 
         apiCallTimes.clear();
         apiCallTimes.addAll(validTimes);
+    }
+
+    @FXML
+    void fetchAllMovies() throws IOException, InterruptedException {
+
+        Thread fetchThread = new Thread(() -> {
+            try {
+                progressBar.setVisible(true);
+                page++;
+                APIResponse apiResponse = APIUtility.searchMovies(searchTextField.getText().trim(), page);
+
+                double progress = (double) (page * 10) / totalNumberOfMovies;
+
+                // This is a lambda expression that will run on the JavaFX thread. It allows you to access the JavaFx thread is available.
+                Platform.runLater(()-> {
+                    progressBar.setProgress((double) listView.getItems().size() / totalNumberOfMovies);
+                    listView.getItems().addAll(apiResponse.getMovies());
+                    if(listView.getItems().size() < totalNumberOfMovies) {
+                        try {
+                            fetchAllMovies();
+                        } catch (IOException | InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        progressBar.setVisible(false);
+                    }
+                    updateLabels();
+                });
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        fetchThread.start();
+        progressBar.setVisible(false);
+    }
+
+    private void updateLabels()
+    {
+        infoLabel.setText("Showing " + listView.getItems().size() + " of " + totalNumberOfMovies + " results");
+        fetchAllButton.setVisible(listView.getItems().size() < totalNumberOfMovies);
     }
 
 }

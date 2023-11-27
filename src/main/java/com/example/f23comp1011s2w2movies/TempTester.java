@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class TempTester {
     public static void main(String[] args) throws IOException, InterruptedException {
-        APIResponse apiResponse = APIUtility.searchMovies("Infinity War");
+        APIResponse apiResponse = APIUtility.searchMovies("Infinity War", 1);
         System.out.println(apiResponse);
 
         MovieDetails movieDetails = APIUtility.getMovie("tt9777666");
